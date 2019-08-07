@@ -1,12 +1,7 @@
 # -*- coding: utf-8 -*-
 import datetime
-from flask import current_app
 from project import db
-#association table
-interviewer_assigned= db.Table('associate_table',
-    db.Column('interviewer_id', db.Integer, db.ForeignKey('interviewer.id'), primary_key=True),
-    db.Column('interview_id', db.Integer, db.ForeignKey('interview.id'), primary_key=True)
-)
+
 #Interviewer model
 class Interviewer(db.Model):
     __tablename__ = "interviewer"
@@ -14,7 +9,7 @@ class Interviewer(db.Model):
     firstname = db.Column(db.String(32), nullable=False)
     lastname = db.Column(db.String(32), nullable=True)
     email = db.Column(db.String(128), nullable=False, unique = True)
-     = db.relationship('Category', foreign_keys=categorie_id)
+    interview = db.relationship('Interview', secondary="interviewer_assigned")
     
     #Class constructor 
     def __init__(self, firstname, lastname, email):
@@ -38,8 +33,9 @@ class Interview(db.Model):
     title = db.Column(db.String(32))
     start_time = db.Column(db.DateTime)
     end_time = db.Column(db.DateTime)
-    candidate_id = db.Column(db.Integer, db.ForeignKey('candidate.id'), unique=True)
-    candidate=relationship("Candidate", back_populates="interview", uselist=False)
+    candidate_id = db.Column(db.Integer, db.ForeignKey('candidates.id'), unique=True)
+    candidate=db.relationship("Candidates", backref=db.backref("Interview", uselist=False))
+    interviewer=db.relationship("Interviewer", secondary = "interviewer_assigned", cascade="all")
 
     #Class constuctor
     def __init__(self, title, start_time, end_time):
@@ -56,7 +52,16 @@ class Interview(db.Model):
             "end_time": self.end_time
         }
 
-#Candidate table
+#assiciation table
+class Interviewer_assigned(db.Model):
+    __tablename__="interviewer_assigned"
+    id = db.Column(db.Integer, primary_key=True)
+    interviewer_id= db.Column( db.Integer, db.ForeignKey('interviewer.id'))
+    interview_id= db.Column(db.Integer, db.ForeignKey('interview.id'))
+    interview = db.relationship("Interview", backref=db.backref("interviewer_assigned", cascade="all") )
+    interviewer = db.relationship("Interviewer", backref=db.backref("interviewer_assigned", cascade="all") )
+
+    #Candidate table
 class Candidates(db.Model):
     __tablename__ = "candidates"
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)

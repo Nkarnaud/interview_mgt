@@ -1,18 +1,20 @@
 version: "3.4"
 
 services:
-  interview_mgt:
+  interview:
     container_name: interview
     build:
       context: ./interview
       dockerfile: Dockerfile
+    volumes:
+      - './interview:/usr/src/app'
     ports:
       - 5001:5000
     environment:
-      - FLASK_APP=project/__init__.py
       - FLASK_DEBUG=1
       - APP_SETTINGS=project.config.DevelopmentConfig
       - DATABASE_URL=postgres://postgres:postgres@interview-db:5432/interview_db
+      - DATABASE_TEST_URL=postgres://postgres:postgres@interview-db:5432/interview_testdb
       - SECRET_KEY=my_precious
     depends_on:
       - interview-db
@@ -20,15 +22,12 @@ services:
       - interview-db
 
   interview-db:
-    restart: always
     container_name: interview-db
     build:
       context: ./interview/project/db
       dockerfile: Dockerfile
-    environment:
-      - MYSQL_ROOT_PASSWORD= test
-      - MYSQL_DATABASE = favorite_db
-      - MYSQL_USER= root
-      - MYSQL_PASSWORD = test1234
     ports:
-      - 5432:5432
+      - 5435:5432
+    environment:
+      - POSTGRES_PROFILE=postgres
+      - POSTGRES_PASSWORD=postgres

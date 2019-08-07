@@ -7,6 +7,7 @@ class BaseConfig:
     TESTING = False
     SECRET_KEY = os.environ.get('SECRET_KEY')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    DEBUG_TB_ENABLED = True
 
 class DevelopmentConfig(BaseConfig):
     """Development configuration"""

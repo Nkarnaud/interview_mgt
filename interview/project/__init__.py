@@ -19,7 +19,7 @@ def create_app(script_info=None):
     db.init_app(app)
     migrate.init_app(app, db)
     # register endpoints 
-    from project.api.interview import interview_blueprint
+    from project.api.interviewapi import interview_blueprint
     app.register_blueprint(interview_blueprint)
     # shell context for flask cli
     app.shell_context_processor({'app': app, 'db': db})

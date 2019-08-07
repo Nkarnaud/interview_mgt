@@ -3,7 +3,7 @@ from flask.cli import FlaskGroup
 import datetime
 from sqlalchemy import event
 from project import db, create_app
-from project.models.models import Favorite, Category
+from project.models.models import Interview, Interviewer, Candidates
 
 app = create_app()
 cli = FlaskGroup(create_app=create_app)
@@ -14,7 +14,7 @@ def recreate_db():
     db.create_all()
     db.session.commit()
 
-@cli.command()
+''' @cli.command()
 def seed_db():
     """Seeds the database."""
     db.session.add(favorite(
@@ -35,7 +35,7 @@ def seed_db():
         gender='M',
         tell ='00688283',
     ))
-    db.session.commit()
+    db.session.commit() '''
 
 if __name__ == '__main__':
     cli()

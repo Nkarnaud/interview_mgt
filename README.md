@@ -1,2 +1,1 @@
-# interview_mgt
-This project build interview management system end points using python flask, docker, flask-blueprint, flask-sqlalchemy ... 
+# Interview management

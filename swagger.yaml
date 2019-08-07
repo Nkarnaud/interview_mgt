@@ -1,0 +1,379 @@
+swagger: "2.0"
+info:
+  description: "Interview Management API"
+  version: "1.0.0"
+  title: "Interview Management API"
+basePath: "/interview"
+schemes:
+- "https"
+produces:
+- "application/json"
+paths:
+  /candidate:
+    get:
+      tags:
+      - "Get Candidate"
+      summary: "Get candidate information"
+      description: "The Get candidate information from the system and return candidate details"
+      operationId: "candidate_get"
+      parameters:
+      - name: "candidate_id"
+        in: "query"
+        description: "candidate_id"
+        type: "string"
+      responses:
+        200:
+          description: "Candidate informations"
+          schema:
+            $ref: "#/definitions/Candidate"
+        default:
+          description: "Unexpected Error"
+          schema:
+            $ref: "#/definitions/Error"
+      x-swagger-router-controller: "swagger_server.controllers.user_controller"
+    post:
+      tags:
+      - "Create Candidate"
+      summary: "Create Candidate"
+      description: "Candidate create endpoint insert and return new candidate information"
+      operationId: "candidate_create"
+      parameters:
+      - name: "candidate"
+        in: "body"
+        description: "information of candidate."
+        required: true
+        schema:
+          $ref: "#/definitions/Candidate"
+      responses:
+        201:
+          description: "Create new Candidate"
+          schema:
+            $ref: "#/definitions/Candidate"
+        default:
+          description: "Unexpected Error"
+          schema:
+            $ref: "#/definitions/Error"
+      x-swagger-router-controller: "swagger_server.controllers.user_controller"
+    put:
+      tags:
+      - "Update candidate"
+      summary: "Update the information of the candidate"
+      description: "The Update the information of the candidate endpoint update and return the information of candidate"
+      operationId: "candidate_update"
+      parameters:
+      - name: "candidate_id"
+        in: "query"
+        description: "candidate_id"
+        required: true
+        type: "string"
+      - name: "candidate"
+        in: "body"
+        description: "informatin of candidate"
+        schema:
+          $ref: '#/definitions/Candidate'
+      responses:
+        200:
+          description: "Update the candidate"
+          schema:
+            $ref: '#/definitions/Candidate'
+        default:
+          description: "Unexpected Error"
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      tags:
+      - "Remove Candidate"
+      summary: "Delete the information of the Candidate"
+      description: "The Delete the informatin of the Candidate endpoint Delete and return the id of deleted candidate"
+      operationId: "candidate_remove"
+      parameters:
+      - name: "candidate_id"
+        in: "query"
+        description: "candidate_id"
+        required: true
+        type: "string"
+      responses:
+        404:
+          description: "Candidate not found"
+          schema:
+            $ref: '#/definitions/Error'
+  /interviewer:
+    get:
+      tags:
+      - "Get Interviewer"
+      summary: "Get interviewer in the system"
+      description: "The endpoint will get an interviewer and return interviewer details"
+      parameters:
+      - name: "interviewer_id"
+        in: "query"
+        description: "interviewer_id"
+        required: true
+        type: "string"
+      responses:
+        201:
+          description: "Interviewer details"
+        default:
+          description: "Unexpected Error"
+          schema:
+            $ref: "#/definitions/Error"
+      x-swagger-router-controller: "swagger_server.controllers.user_controller"
+    post:
+      tags:
+      - "Create Interviewer"
+      summary: "Create Interviewer"
+      description: "Interviewer create endpoint insert and return new interviewer information"
+      operationId: "interviewer_create"
+      parameters:
+      - name: "interviewer"
+        in: "body"
+        description: "information of deliveryman."
+        required: true
+        schema:
+          $ref: "#/definitions/Interviewer"
+      responses:
+        201:
+          description: "Create new Interviewer"
+          schema:
+            $ref: "#/definitions/Interviewer"
+        default:
+          description: "Unexpected Error"
+          schema:
+            $ref: "#/definitions/Error"
+      x-swagger-router-controller: "swagger_server.controllers.user_controller"
+    put:
+      tags:
+      - "Update Interviewer"
+      summary: "Update the information fo an Interviewer"
+      description: "This endpoint will update and interviewer information and return the updated interviewer details"
+      operationId: "interviewer_update"
+      parameters:
+      - name: "interviewer_id"
+        in: "query"
+        description: "interviewer_id"
+        type: "string"
+      - name: "interviewer"
+        in: "body"
+        description: "interviewer"
+        required: true
+        schema:
+          $ref: "#/definitions/Interviewer"
+      responses:
+        200:
+          description: "Update the  Interviewer"
+          schema: 
+            $ref: "#/definitions/Interviewer"
+        default:
+          description: "Unexpected Error"
+          schema: 
+            $ref: "#/definitions/Error"
+    delete:
+      tags:
+      - "Remove Interviewer"
+      summary: "Delete the information of the Interviewer"
+      description: "The Delete the informatin of the interviewer endpoint Delete and return the id of deleted interviewer"
+      operationId: "interviewer_remove"
+      parameters:
+      - name: "interviewer_id"
+        in: "query"
+        description: "interviewer_id"
+        required: true
+        type: "string"
+      responses:
+        404:
+          description: "Interviewer not found"
+          schema:
+            $ref: '#/definitions/Error'
+  /interview:
+    get:
+      tags:
+      - "Get interview"
+      summary: "Get interview information"
+      description: "The Get interview information from the system and return interview details"
+      operationId: "interview_get"
+      parameters:
+      - name: "interview_id"
+        in: "query"
+        description: "interview_id"
+        type: "string"
+      responses:
+        200:
+          description: "interview informations"
+          schema:
+            $ref: "#/definitions/Interview"
+        default:
+          description: "Unexpected Error"
+          schema:
+            $ref: "#/definitions/Error"
+      x-swagger-router-controller: "swagger_server.controllers.user_controller"
+    post:
+      tags:
+      - "Create interview"
+      summary: "Create interview"
+      description: "interview create endpoint insert and return new interview information"
+      operationId: "interview_create"
+      parameters:
+      - name: "interview"
+        in: "body"
+        description: "information of interview."
+        required: true
+        schema:
+          $ref: "#/definitions/Interview"
+      responses:
+        201:
+          description: "Create new interview"
+          schema:
+            $ref: "#/definitions/Interview"
+        default:
+          description: "Unexpected Error"
+          schema:
+            $ref: "#/definitions/Error"
+      x-swagger-router-controller: "swagger_server.controllers.user_controller"
+    put:
+      tags:
+      - "Update interview"
+      summary: "Update the information of the interview"
+      description: "The Update the information of the interview endpoint update and return the information of interview"
+      operationId: "interview_update"
+      parameters:
+      - name: "interview_id"
+        in: "query"
+        description: "interview_id"
+        required: true
+        type: "string"
+      - name: "interview"
+        in: "body"
+        description: "informatin of interview"
+        schema:
+          $ref: '#/definitions/Interview'
+      responses:
+        200:
+          description: "Update the interview"
+          schema:
+            $ref: '#/definitions/Interview'
+        default:
+          description: "Unexpected Error"
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      tags:
+      - "Remove Interview"
+      summary: "Delete the information of the Interview"
+      description: "The Delete the informatin of the Interview endpoint Delete and return the id of deleted Interview"
+      operationId: "interview_remove"
+      parameters:
+      - name: "interview_id"
+        in: "query"
+        description: "interview_id"
+        required: true
+        type: "string"
+      responses:
+        404:
+          description: "interview not found"
+          schema:
+            $ref: '#/definitions/Error'
+  /candidate_assign:
+    post:
+      tags:
+      - " Assign an interview to a candidate"
+      summary: "Assign an interview to a candidate"
+      description: "this end point permit to assign an avialable intervier slot to a candidate"
+      operationId: "candidate_assign"
+      parameters:
+      - name: "candidate_assign"
+        in: "body"
+        description: "ID of the interview to assign to the candidate."
+        required: true
+        schema:
+          $ref: "#/definitions/Candidate_assign"
+      responses:
+        201:
+          description: "Create new interview"
+          schema:
+            $ref: "#/definitions/Candidate_assign"
+        default:
+          description: "Unexpected Error"
+          schema:
+            $ref: "#/definitions/Error"
+  /interviewer_assign:
+    post:
+      tags:
+      - " Assign an interview to an interviewer"
+      summary: "Assign an interview to an interviewer"
+      description: "this endpoint permit to assign an avialable intervier slot to an interviewer"
+      operationId: "interviwer_assign"
+      parameters:
+      - name: "interviewer_assign"
+        in: "body"
+        description: "ID of the interview to assign to the interviewer."
+        required: true
+        schema:
+          $ref: "#/definitions/Interviewer_assign"
+      responses:
+        201:
+          description: "Create new interview"
+          schema:
+            $ref: "#/definitions/Interviewer_assign"
+        default:
+          description: "Unexpected Error"
+          schema:
+            $ref: "#/definitions/Error"
+  
+definitions:
+  Candidate:
+    type: "object"
+    properties:
+      candidate_id:
+        type: "string"
+      firstname: 
+        type: "string"
+      lastname: 
+        type: "string"
+      email:
+        type: "string"
+  Interviewer:
+    type: "object"
+    properties:
+      interviewer_id:
+        type: "string"
+      firstname: 
+        type: "string"
+      lastname: 
+        type: "string"
+      email:
+        type: "string"
+  Interview:
+    type: "object"
+    properties:
+      interview_id:
+        type: "string"
+      title: 
+        type: "string"
+      start_time: 
+        type: "object"
+      end_time:
+        type: "object"
+  Candidate_assign:
+    type: "object"
+    properties:
+      interview_id:
+        type: "string"
+      candidate_id: 
+        type: "string"
+  Interviewer_assign:
+    type: "object"
+    properties:
+      interview_id:
+        type: "string"
+      candidate_id: 
+        type: "string"
+  Error:
+    type: "object"
+    properties:
+      code:
+        type: "integer"
+        format: "int32"
+      message:
+        type: "string"
+      fields:
+        type: "string"
+

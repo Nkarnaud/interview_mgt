@@ -3,6 +3,7 @@ from flask import Blueprint, jsonify, request
 from project.models.models import Interview, Interviewer, Candidates, Interviewer_assigned
 from project import db
 from sqlalchemy import not_
+import json
 
 #defining end point blueprint
 interview_blueprint = Blueprint('interview', __name__)
@@ -15,8 +16,13 @@ def ping_pong():
         'message': 'pong!'
     })
 
+#create interviewer
 @interview_blueprint.route('/interviewer/create', methods=['POST'])
 def create_interviewer():
+    """This endpoint will permit the creation of interviewer.
+    Input: firstname, lastname, email
+    Output: success if the interviewer is created or fail if not
+    """
     # get post data
     post_data = request.get_json()
     response_object = {
@@ -51,7 +57,10 @@ def create_interviewer():
 #Get interviewer details
 @interview_blueprint.route('/interviewer/<id>', methods=['GET'])
 def interviewer_detaile(id):
-    """Get interviewer details giving it id"""
+    """Get interviewer details given it id
+        Input: interviewer ID
+        Output: interview details if successful and fail if not
+    """
     response_object = {
         'status': 'fail', 
         'message': 'Invalid payload.'
@@ -78,9 +87,14 @@ def interviewer_detaile(id):
         db.session.rollback()
         return jsonify({"message": str(e)}), 500
 
+# This function provide the list of all favorite in the system
 @interview_blueprint.route('/interviewer/lists', methods=['GET'])
 def get_all_interviewer():
-    # This function provide the list of all favorite in the system
+    """ Return the list of interviewer in the system.
+        No input
+        output the list of interviewer if successfull or fail if not
+    """
+    try:
         response_object = {
             'status': 'success',
             'data': {
@@ -88,10 +102,16 @@ def get_all_interviewer():
             }
         }
         return jsonify(response_object), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"message": str(e)}), 500
 
 @interview_blueprint.route('/interviewer/update/<id>', methods=['PUT'])
 def update_interviewer(id):
-    """To update a interviewer in the systeme"""
+    """To update a interviewer in the systeme.
+        Input: interviwer id
+        output: updated interviewer if successfull and fail if not 
+    """
     response_object = {
         'status': 'fail',
         'message': 'Sorry. The interviewer does not exists'
@@ -119,6 +139,10 @@ def update_interviewer(id):
 #To delete interviewer
 @interview_blueprint.route('/interviewer/delete/<id>', methods=['DELETE'])
 def delete_interviewer(id):
+    """ Delete and interviewer in the system.
+        Input: interviewer id
+        output: success message or fail message
+    """
     response_object = {
         'status': 'fail',
         'message': 'Sorry. The interviewer does not exists'
@@ -141,6 +165,10 @@ def delete_interviewer(id):
 #create candidate
 @interview_blueprint.route('/candidate/create', methods=['POST'])
 def create_candidate():
+    """This endpoint will permit the creation of candidate.
+    Input: firstname, lastname, email
+    Output: success if the candidate is created or fail if not
+    """
     # get post data
     post_data = request.get_json()
     response_object = {
@@ -175,7 +203,10 @@ def create_candidate():
 #Get candidate details
 @interview_blueprint.route('/candidate/<id>', methods=['GET'])
 def candidate_detail(id):
-    """Get Candidate details giving it id"""
+    """Get Candidate details given it id
+        Input: candidate ID
+        Output: candidate details if successful and fail if not
+    """
     response_object = {
         'status': 'fail', 
         'message': 'Invalid payload.'
@@ -199,24 +230,34 @@ def candidate_detail(id):
                 'status' : 'fail',
                 'message': 'candidate does not exist.'}
             return jsonify(response_object), 401
-    except exc.IntegrityError as e:
+    except Exception as e:
         db.session.rollback()
         return jsonify({"message": str(e)}), 500
 
 @interview_blueprint.route('/candidate/lists', methods=['GET'])
 def get_all_candidate():
+    """ Return the list of interviewer in the system.
+        No input
+        output the list of interviewer if successfull or fail if not
+    """
     # This function provide the list of all candidate in the system
+    try:
         response_object = {
             'status': 'success',
             'data': {
-                'users': [candidate.to_json() for candidate in Candidates.query.all()]
+                'candidates': [candidate.to_json() for candidate in Candidates.query.all()]
             }
         }
         return jsonify(response_object), 200
+    except Exception as e:
+        return jsonify({"message": str(e)}), 500
 
 @interview_blueprint.route('/candidate/update/<id>', methods=['PUT'])
 def update_candidate(id):
-    """To update a candidate in the systeme"""
+    """To update a candidate in the systeme.
+    Input: candidate id
+    output: updated candidate if successfull and fail if not 
+    """
     response_object = {
         'status': 'fail',
         'message': 'Sorry. The candidate does not exist'
@@ -244,6 +285,10 @@ def update_candidate(id):
 #To delete a candidate
 @interview_blueprint.route('/candidate/delete/<id>', methods=['DELETE'])
 def delete_candidate(id):
+    """ Delete and candidate in the system.
+        Input: candidate id
+        output: success message or fail message
+    """
     response_object = {
         'status': 'fail',
         'message': 'Sorry. The candidate does not exists'
@@ -266,6 +311,10 @@ def delete_candidate(id):
 #create interview slot
 @interview_blueprint.route('/interview/create', methods=['POST'])
 def create_interview():
+    """ This end point is used to create and interview slot.
+        input: title, start time, end time
+        Output: success message if interview slot create or fail if not
+    """
     # get post data
     post_data = request.get_json()
     response_object = {
@@ -299,7 +348,10 @@ def create_interview():
 
 @interview_blueprint.route('/interview/<id>', methods=['GET'])
 def get_interview(id):
-    """Get interview details giving it id"""
+    """Get interview details given it id
+        Input: interview ID 
+        Output: interview details if successful or fail if not
+    """
     response_object = {
         'status': 'fail', 
         'message': 'Invalid payload.'
@@ -321,18 +373,156 @@ def get_interview(id):
                 'status' : 'fail',
                 'message': 'Interview does not exist.'}
             return jsonify(response_object), 400
-    except exc.IntegrityError as e:
+    except Exception as e:
         db.session.rollback()
+        return jsonify({"message": str(e)}), 500
+
+#Return the list of all interview
+@interview_blueprint.route('/interview_list', methods=['GET'])
+def get_interview_list():
+    """ Return list of all interviews in the system.
+        input : no input
+        output: list of all interviews in the system.
+    """
+    response_object={
+        'status': 'success',
+        'data': {
+            'interviews':[interview.to_json() for interview in Interview.query.all()]
+        }
+    }
+    return jsonify(response_object), 200
+
+#To delete a interview
+@interview_blueprint.route('/interview/delete/<id>', methods=['DELETE'])
+def delete_interview(id):
+    """ Delete an interview in the system
+        input: interview id
+        output: success or fail"""
+    response_object = {
+        'status': 'fail',
+        'message': 'Sorry. The interview does not exists'
+    }
+    try:
+        interview = Interview.query.get(int(id))
+        if interview:
+            db.session.delete(interview)
+            db.session.commit()
+            response_object = {
+                'status': 'deleted', 
+                'message': 'The interview has been deleted'
+                }
+            return  jsonify(response_object), 200
+        else:
+            return jsonify(response_object), 400
+    except Exception as e:
         return jsonify({"message": str(e)}), 500
 
 @interview_blueprint.route('/interview_emptyslot', methods=['GET'])
 def interview_emptyslot():
-    """Get interview empyty slot for a candidate"""
-    
+    """Get interview empyty slot
+        Input: no in put
+        output: list of empty interview slot
+    """
     response_object = {
             'status': 'success',
             'data': {
-                'users': [interviewer.to_json() for interviewer in Interview.query.filter(Interview.candidate_id==None).all()]
+                'interview_empty_slot': [interview.to_json() for interview in Interview.query.filter(Interview.candidate_id==None).all()]
             }
         }
     return jsonify(response_object), 200
+
+#assign a one customer to one and only one interview
+@interview_blueprint.route('/candidate_assign/<candidate_id>/<interview_id>', methods=['POST'])
+def candidate_assigned_interview(candidate_id, interview_id):
+    """ Assign a candidates to an interview
+        This end point takes in a candidate id and interview id and assign
+        the candidate to that interview slot if the slot is empty.
+        The output is the interview with the assigne candidate
+        """
+    response_object = {
+        'status': 'Fail', 
+        'message': 'Invalid payload'
+    }
+    try:
+        candidate = Candidates.query.get(int(candidate_id))
+        interview = Interview.query.get(int(interview_id))
+        if interview.candidate_id == int(candidate_id):
+            response_object['message']='This candidate is already assigned to this interview.'
+            return jsonify(response_object), 401
+        else:
+            interview.candidates = candidate
+            interview.candidate_id = candidate.id
+            db.session.commit()
+            response_object['status'] = 'Success'
+            response_object['message'] = 'This candidate hase been assigned to the interview.'
+            return jsonify(response_object), 201
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"message": str(e)}), 500
+
+@interview_blueprint.route('/interviewer_assign/<interviewer_id>/<interview_id>', methods=['POST'])
+def interviewer_assign_to_interview(interviewer_id, interview_id):
+    """
+        Assigning an interviewer to and interview slot.
+        And interviewer can be assign to many interviewer
+        Input:{interviewer id, interview id} 
+        Output: { }
+    """
+    response_object = {
+        'status' : 'Fail.',
+        'message' :'Invalid Payload'
+    }
+    try:
+        interviewer = Interviewer.query.get(int(interviewer_id))
+        interview = Interview.query.get(int(interview_id))
+        
+        if interview in interviewer.interview:
+            response_object['message']='This interviewer is already assigned to this interview or the interview slot do not have a candidate.'
+            return jsonify(response_object), 401
+        else:
+            interviewer.interview.append(interview)
+            db.session.commit()
+            response_object['status'] = 'Success'
+            response_object['message'] = 'This interviewer has been assigned to the interview.'
+            return jsonify(response_object), 201
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"message": str(e)}), 500
+
+#return the list of interview of an interviewer
+@interview_blueprint.route('/interview/interviewer/list/<interviewer_id>', methods=['GET'])
+def interviewers_interview(interviewer_id):
+    """ Return the list of interviewers interview
+        input: candidate id 
+        output:  interview details
+    """
+    try:
+        interview = Interview.query.join(Interviewer_assigned).filter_by(interviewer_id=int(interviewer_id))
+        response_object = {
+            'status': 'success.',
+            'data': {
+                'interviews': [interview.to_json() for interview in Interview.query.join(Interviewer_assigned).filter_by(interviewer_id=int(interviewer_id))]
+            } 
+        }
+        return jsonify(response_object), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"message": str(e)}), 500
+
+@interview_blueprint.route('/interview/candidate/<candidates_id>', methods=['GET'])
+def candidate_interview(candidates_id):
+    """ Return the candidate interview details
+        input: interviewer id 
+        output: list of interviews 
+    """
+    try:
+        response_object = {
+            'status': 'success.',
+            'data': {
+                'interview':[interview.to_json() for interview in Interview.query.filter_by(candidate_id=candidates_id).all()]
+                }
+        }
+        return jsonify(response_object), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"message": str(e)}), 500

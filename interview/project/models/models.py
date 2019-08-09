@@ -34,7 +34,7 @@ class Interview(db.Model):
     start_time = db.Column(db.DateTime)
     end_time = db.Column(db.DateTime)
     candidate_id = db.Column(db.Integer, db.ForeignKey('candidates.id'), unique=True)
-    candidate=db.relationship("Candidates", backref=db.backref("Interview", uselist=False))
+    candidates=db.relationship("Candidates", backref=db.backref("interview", uselist=False))
     interviewer=db.relationship("Interviewer", secondary = "interviewer_assigned", cascade="all")
 
     #Class constuctor
@@ -47,6 +47,7 @@ class Interview(db.Model):
     def to_json(self):
         return{
             "id": self.id,
+            "candidate_id": self.candidate_id,
             "title": self.title,
             "start_time": self.start_time,
             "end_time": self.end_time

@@ -98,7 +98,7 @@ def get_all_interviewer():
         response_object = {
             'status': 'success',
             'data': {
-                'users': [interviewer.to_json() for interviewer in Interviewer.query.all()]
+                'interviewers': [interviewer.to_json() for interviewer in Interviewer.query.all()]
             }
         }
         return jsonify(response_object), 200
@@ -117,24 +117,30 @@ def update_interviewer(id):
         'message': 'Sorry. The interviewer does not exists'
     }
     post_data = request.get_json()
+    if not post_data:
+        return jsonify(response_object), 400
+    firstname = post_data.get('firstname')
+    lastname = post_data.get('lastname')
+    email = post_data.get('email')
     try:
         interviewer = Interviewer.query.get(id)
         if not interviewer:
             response_object['message'] = 'Interviewer not found'
             return jsonsify(response_object), 404
         else:
-            interviewer.firstname = post_data.get('firstname')
-            interviewer.lastname = post_data.get('lastname')
-            interviewer.email = post_data.get('email')
+            interviewer.firstname = firstname
+            interviewer.lastname = lastname
+            interviewer.email = email
             db.session.commit()
             response_object = {
                 'status': 'Modified', 
                 'message': 'The interviewer has been update'
                 }
-            return response_object, 200
+            return jsonify(response_object), 201
     except Exception as e:
         db.session.rollback()
-        return jsonify({"message": str(e)}), 500
+        response_object['message'] = 'Interviewer not found'
+        return jsonify(response_object), 404
 
 #To delete interviewer
 @interview_blueprint.route('/interviewer/delete/<id>', methods=['DELETE'])
@@ -229,7 +235,7 @@ def candidate_detail(id):
             response_object ={
                 'status' : 'fail',
                 'message': 'candidate does not exist.'}
-            return jsonify(response_object), 401
+            return jsonify(response_object), 400
     except Exception as e:
         db.session.rollback()
         return jsonify({"message": str(e)}), 500
@@ -263,21 +269,26 @@ def update_candidate(id):
         'message': 'Sorry. The candidate does not exist'
     }
     post_data = request.get_json()
+    if not post_data:
+        return jsonify(response_object), 400
+    firstname = post_data.get('firstname')
+    lastname = post_data.get('lastname')
+    email = post_data.get('email')
     try:
-        candidate = Candidates.query.get(id)
+        candidate = Candidates.query.get(int(id))
         if not candidate:
             response_object['message'] = 'Candidate not found'
-            return jsonsify(response_object), 404
+            return jsonify(response_object), 404
         else:
-            candidate.firstname = post_data.get('firstname')
-            candidate.lastname = post_data.get('lastname')
-            candidate.email = post_data.get('email')
+            candidate.firstname = firstname
+            candidate.lastname = lastname
+            candidate.email = email
             db.session.commit()
             response_object = {
                 'status': 'Modified', 
                 'message': 'The candidate has been update'
                 }
-            return response_object, 201
+            return jsonify(response_object), 201
     except Exception as e:
         db.session.rollback()
         return jsonify({"message": str(e)}), 500
@@ -362,7 +373,7 @@ def get_interview(id):
             response_object = {
                 'status': 'success',
                 'data': {
-                    'id': inteview.id,
+                    'title': inteview.title,
                     'start_time': inteview.start_time,
                     'end_time': inteview.end_time
                 }
@@ -440,7 +451,7 @@ def candidate_assigned_interview(candidate_id, interview_id):
         The output is the interview with the assigne candidate
         """
     response_object = {
-        'status': 'Fail', 
+        'status': 'fail', 
         'message': 'Invalid payload'
     }
     try:
@@ -448,7 +459,10 @@ def candidate_assigned_interview(candidate_id, interview_id):
         interview = Interview.query.get(int(interview_id))
         if interview.candidate_id == int(candidate_id):
             response_object['message']='This candidate is already assigned to this interview.'
-            return jsonify(response_object), 401
+            return jsonify(response_object), 400
+        elif interview.candidate_id:
+            response_object['message']='This Interview already have a candidate assigned to.'
+            return jsonify(response_object), 400
         else:
             interview.candidates = candidate
             interview.candidate_id = candidate.id
@@ -477,8 +491,8 @@ def interviewer_assign_to_interview(interviewer_id, interview_id):
         interview = Interview.query.get(int(interview_id))
         
         if interview in interviewer.interview:
-            response_object['message']='This interviewer is already assigned to this interview or the interview slot do not have a candidate.'
-            return jsonify(response_object), 401
+            response_object['message']='This interviewer is already assigned to this interview.'
+            return jsonify(response_object), 400
         else:
             interviewer.interview.append(interview)
             db.session.commit()

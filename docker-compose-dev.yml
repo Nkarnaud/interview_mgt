@@ -12,7 +12,7 @@ services:
       - 5001:5000
     environment:
       - FLASK_DEBUG=1
-      - APP_SETTINGS=project.config.DevelopmentConfig
+      - APP_SETTINGS=project.config.ProductionConfig
       - DATABASE_URL=postgres://postgres:postgres@interview-db:5432/interview_db
       - DATABASE_TEST_URL=postgres://postgres:postgres@interview-db:5432/interview_testdb
       - SECRET_KEY=my_precious

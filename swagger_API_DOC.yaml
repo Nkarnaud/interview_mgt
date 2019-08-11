@@ -3,24 +3,25 @@ info:
   description: "Interview Management API"
   version: "1.0.0"
   title: "Interview Management API"
-basePath: "/interview"
+basePath: "/"
 schemes:
 - "https"
 produces:
 - "application/json"
 paths:
-  /candidate:
+  /candidate/{candidate_id}:
     get:
       tags:
       - "Get Candidate"
       summary: "Get candidate information"
-      description: "The Get candidate information from the system and return candidate details"
-      operationId: "candidate_get"
+      description: "Get candidate information from the system and return candidate details"
+      operationId: "getCandidate"
       parameters:
       - name: "candidate_id"
-        in: "query"
+        in: "path"
         description: "candidate_id"
         type: "string"
+        required: true
       responses:
         200:
           description: "Candidate informations"
@@ -31,6 +32,24 @@ paths:
           schema:
             $ref: "#/definitions/Error"
       x-swagger-router-controller: "swagger_server.controllers.user_controller"
+  /candidate/lists:
+    get:
+      tags:
+      - "Get list of Candidate"
+      summary: "Get list of candidate"
+      description: "Get list of candidate information from the system and return them"
+      operationId: "Candidate_list"
+      responses:
+        200:
+          description: "Candidate informations"
+          schema:
+            $ref: "#/definitions/Candidate"
+        default:
+          description: "Unexpected Error"
+          schema:
+            $ref: "#/definitions/Error"
+      x-swagger-router-controller: "swagger_server.controllers.user_controller"
+  /candidate/create:
     post:
       tags:
       - "Create Candidate"
@@ -54,6 +73,7 @@ paths:
           schema:
             $ref: "#/definitions/Error"
       x-swagger-router-controller: "swagger_server.controllers.user_controller"
+  /candidate/update/{candidate_id}:
     put:
       tags:
       - "Update candidate"
@@ -62,7 +82,7 @@ paths:
       operationId: "candidate_update"
       parameters:
       - name: "candidate_id"
-        in: "query"
+        in: "path"
         description: "candidate_id"
         required: true
         type: "string"
@@ -80,6 +100,7 @@ paths:
           description: "Unexpected Error"
           schema:
             $ref: '#/definitions/Error'
+  /candidate/delete/{candidate_id}:
     delete:
       tags:
       - "Remove Candidate"
@@ -88,7 +109,7 @@ paths:
       operationId: "candidate_remove"
       parameters:
       - name: "candidate_id"
-        in: "query"
+        in: "path"
         description: "candidate_id"
         required: true
         type: "string"
@@ -97,7 +118,7 @@ paths:
           description: "Candidate not found"
           schema:
             $ref: '#/definitions/Error'
-  /interviewer:
+  /interviewer/{interviewer_id}:
     get:
       tags:
       - "Get Interviewer"
@@ -105,20 +126,21 @@ paths:
       description: "The endpoint will get an interviewer and return interviewer details"
       parameters:
       - name: "interviewer_id"
-        in: "query"
+        in: "path"
         description: "interviewer_id"
         required: true
         type: "string"
       responses:
-        201:
+        200:
           description: "Interviewer details"
         default:
           description: "Unexpected Error"
           schema:
             $ref: "#/definitions/Error"
       x-swagger-router-controller: "swagger_server.controllers.user_controller"
+  /interviewer/create:
     post:
-      tags:
+      tags: 
       - "Create Interviewer"
       summary: "Create Interviewer"
       description: "Interviewer create endpoint insert and return new interviewer information"
@@ -140,6 +162,7 @@ paths:
           schema:
             $ref: "#/definitions/Error"
       x-swagger-router-controller: "swagger_server.controllers.user_controller"
+  /interviewer/update/{interviewer_id}:
     put:
       tags:
       - "Update Interviewer"
@@ -148,9 +171,10 @@ paths:
       operationId: "interviewer_update"
       parameters:
       - name: "interviewer_id"
-        in: "query"
+        in: "path"
         description: "interviewer_id"
         type: "string"
+        required: true
       - name: "interviewer"
         in: "body"
         description: "interviewer"
@@ -166,6 +190,7 @@ paths:
           description: "Unexpected Error"
           schema: 
             $ref: "#/definitions/Error"
+  /interviewer/delete/{interviewer_id}:
     delete:
       tags:
       - "Remove Interviewer"
@@ -174,7 +199,7 @@ paths:
       operationId: "interviewer_remove"
       parameters:
       - name: "interviewer_id"
-        in: "query"
+        in: "path"
         description: "interviewer_id"
         required: true
         type: "string"
@@ -183,7 +208,24 @@ paths:
           description: "Interviewer not found"
           schema:
             $ref: '#/definitions/Error'
-  /interview:
+  /interviewer/lists:
+    get:
+      tags:
+      - "Get list of interviewers"
+      summary: "Get the list of interviewers"
+      description: "Get the list of interviewers from the system and return list of interviewers"
+      operationId: "interviewer_list"
+      responses:
+        200:
+          description: "interviewers informations"
+          schema:
+            $ref: "#/definitions/Interviewer"
+        default:
+          description: "Unexpected Error"
+          schema:
+            $ref: "#/definitions/Error"
+            
+  /interview/{interview_id}:
     get:
       tags:
       - "Get interview"
@@ -192,9 +234,10 @@ paths:
       operationId: "interview_get"
       parameters:
       - name: "interview_id"
-        in: "query"
+        in: "path"
         description: "interview_id"
         type: "string"
+        required: true
       responses:
         200:
           description: "interview informations"
@@ -205,6 +248,7 @@ paths:
           schema:
             $ref: "#/definitions/Error"
       x-swagger-router-controller: "swagger_server.controllers.user_controller"
+  /interview/create:
     post:
       tags:
       - "Create interview"
@@ -228,6 +272,7 @@ paths:
           schema:
             $ref: "#/definitions/Error"
       x-swagger-router-controller: "swagger_server.controllers.user_controller"
+  /interview/update/{interview_id}:
     put:
       tags:
       - "Update interview"
@@ -236,7 +281,7 @@ paths:
       operationId: "interview_update"
       parameters:
       - name: "interview_id"
-        in: "query"
+        in: "path"
         description: "interview_id"
         required: true
         type: "string"
@@ -254,6 +299,7 @@ paths:
           description: "Unexpected Error"
           schema:
             $ref: '#/definitions/Error'
+  /interview/delete/{interview_id}:
     delete:
       tags:
       - "Remove Interview"
@@ -262,7 +308,7 @@ paths:
       operationId: "interview_remove"
       parameters:
       - name: "interview_id"
-        in: "query"
+        in: "path"
         description: "interview_id"
         required: true
         type: "string"
@@ -271,7 +317,39 @@ paths:
           description: "interview not found"
           schema:
             $ref: '#/definitions/Error'
-  /candidate_assign:
+  /interview_list:
+    get:
+      tags:
+      - "Get list of interviews"
+      summary: "Get the list of interviews"
+      description: "Get the list of interviews from the system and return list of interviews"
+      operationId: "interview_list"
+      responses:
+        200:
+          description: "interview informations"
+          schema:
+            $ref: "#/definitions/Interview"
+        default:
+          description: "Unexpected Error"
+          schema:
+            $ref: "#/definitions/Error"
+  /interview_emptyslot:
+    get:
+      tags:
+      - "Get list of interviews empty slots"
+      summary: "Get the liste of interviews empty slots"
+      description: "Get the list of interviews empty slot from the system and return list"
+      operationId: "interview_slot"
+      responses:
+        200:
+          description: "interview empty slot informations"
+          schema:
+            $ref: "#/definitions/Interview"
+        default:
+          description: "Unexpected Error"
+          schema:
+            $ref: "#/definitions/Error"
+  /candidate_assign/{candidate_id}/{interview_id}:
     post:
       tags:
       - " Assign an interview to a candidate"
@@ -279,14 +357,18 @@ paths:
       description: "this end point permit to assign an avialable intervier slot to a candidate"
       operationId: "candidate_assign"
       parameters:
-      - name: "candidate_assign"
-        in: "body"
-        description: "ID of the interview to assign to the candidate."
+      - name: "candidate_id"
+        in: "path"
+        type: "integer"
+        description: "ID of the candidate."
         required: true
-        schema:
-          $ref: "#/definitions/Candidate_assign"
+      - name: "interview_id"
+        in: "path"
+        description: "ID of the interview to be assign to the candidate."
+        type: "integer"
+        required: true
       responses:
-        201:
+        200:
           description: "Create new interview"
           schema:
             $ref: "#/definitions/Candidate_assign"
@@ -294,7 +376,7 @@ paths:
           description: "Unexpected Error"
           schema:
             $ref: "#/definitions/Error"
-  /interviewer_assign:
+  /interviewer_assign/{interviewer_id}/{interview_id}:
     post:
       tags:
       - " Assign an interview to an interviewer"
@@ -302,14 +384,62 @@ paths:
       description: "this endpoint permit to assign an avialable intervier slot to an interviewer"
       operationId: "interviwer_assign"
       parameters:
-      - name: "interviewer_assign"
-        in: "body"
+      - name: "interviewer_id"
+        in: "path"
+        type: "integer"
         description: "ID of the interview to assign to the interviewer."
         required: true
-        schema:
-          $ref: "#/definitions/Interviewer_assign"
+      - name: "interview_id"
+        in: "path"
+        type: "integer"
+        description: "ID of the interview to assign to the interviewer."
+        required: true
       responses:
         201:
+          description: "Create new interview"
+          schema:
+            $ref: "#/definitions/Interviewer_assign"
+        default:
+          description: "Unexpected Error"
+          schema:
+            $ref: "#/definitions/Error"
+  /interview/interviewer/list/{interviewer_id}:
+    post:
+      tags:
+      - " Interviewer interview list"
+      summary: "Return the list of  interview of an interviewer"
+      description: "this endpoint permit to return list of interview for an interviewer"
+      operationId: "interviwer_interviewer_list"
+      parameters:
+      - name: "interviewer_id"
+        in: "path"
+        description: "ID of the interviewer to get it list of interview."
+        type: "integer"
+        required: true
+      responses:
+        200:
+          description: "Create new interview"
+          schema:
+            $ref: "#/definitions/Interviewer_assign"
+        default:
+          description: "Unexpected Error"
+          schema:
+            $ref: "#/definitions/Error"
+  /interview/candidate/{candidate_id}:
+    post:
+      tags:
+      - " Candidate interview details"
+      summary: "Return the interview  details of a candidate"
+      description: "this endpoint permit to return interview details for a candidate "
+      operationId: "candidate_interview"
+      parameters:
+      - name: "candidate_id"
+        in: "path"
+        description: "ID of the candidate to get the interview details."
+        type: "integer"
+        required: true
+      responses:
+        200:
           description: "Create new interview"
           schema:
             $ref: "#/definitions/Interviewer_assign"
@@ -323,7 +453,7 @@ definitions:
     type: "object"
     properties:
       candidate_id:
-        type: "string"
+        type: "integer"
       firstname: 
         type: "string"
       lastname: 
@@ -349,9 +479,11 @@ definitions:
       title: 
         type: "string"
       start_time: 
-        type: "object"
+        type: "string"
+        format: date-time
       end_time:
-        type: "object"
+        type: "string"
+        format: date-time
   Candidate_assign:
     type: "object"
     properties:

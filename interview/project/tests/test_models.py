@@ -1,53 +1,64 @@
 import unittest
-from sqlalchemy.exc import IntegrityError, DataError
+from sqlalchemy.exc import IntegrityError
 import datetime
 from project import db
-from project.models.models import Interview, Interviewer, Candidates
+from project.models.models import Interviewer, Candidates
 from project.tests.base import BaseTestCase
 from project.tests.utils import add_interview, add_interviewer, add_candidate
 
+
 class TestInterviewModel(BaseTestCase):
 
+    # Test add interview
     def test_add_interview(self):
-        interview = add_interview("Backend dev interview", "02-09-2019:09:00", "02-09-2019:10:00")
+        interview = add_interview("Backend dev interview",
+                                  "02-09-2019:09:00", "02-09-2019:10:00")
         self.assertTrue(interview.id)
-        self.assertEqual(interview.title,"Backend dev interview")
-        self.assertEqual(interview.start_time, datetime.datetime.strptime("2019-02-09 09:00:00",'%Y-%m-%d %H:%M:%S'))
-        self.assertEqual(interview.end_time, datetime.datetime.strptime("2019-02-09 10:00:00", '%Y-%m-%d %H:%M:%S'))
+        self.assertEqual(interview.title, "Backend dev interview")
+        self.assertEqual(interview.start_time, datetime.datetime.strptime(
+                         "2019-02-09 09:00:00", '%Y-%m-%d %H:%M:%S'))
+        self.assertEqual(interview.end_time, datetime.datetime.strptime(
+                         "2019-02-09 10:00:00", '%Y-%m-%d %H:%M:%S'))
 
+    # Test add interviewer in the database
     def test_add_interviewer(self):
-        interviewer = add_interviewer("Irene", "Prinz", "irene.prinz@chemondis.com")
+        interviewer = add_interviewer("Irene", "Prinz",
+                                      "irene.prinz@chemondis.com")
         self.assertTrue(interviewer.id)
-        self.assertEqual(interviewer.firstname,"Irene")
+        self.assertEqual(interviewer.firstname, "Irene")
         self.assertEqual(interviewer.lastname, "Prinz")
         self.assertEqual(interviewer.email, "irene.prinz@chemondis.com")
-    
+
+    # Test add dupliocate user in the database
     def test_add_interviewer_duplicate_email(self):
         add_interviewer("Irene", "Prinz", "irene.prinz@chemondis.com")
         duplicate_interviewer = Interviewer(
-            firstname = "chemondis",
-            lastname = "test",
-            email = "irene.prinz@chemondis.com"
-        )
+            firstname="chemondis",
+            lastname="test",
+            email="irene.prinz@chemondis.com")
         db.session.add(duplicate_interviewer)
         self.assertRaises(IntegrityError, db.session.commit)
-    
+
+    # Test add candidate in the database
     def test_add_candidate(self):
-        candidate = add_candidate("Arnaud", "Tsombeng", "arnaud.tsombeng@chemondis.com")
+        candidate = add_candidate("Arnaud", "Tsombeng",
+                                  "arnaud.tsombeng@chemondis.com")
         self.assertTrue(candidate.id)
-        self.assertEqual(candidate.firstname,"Arnaud")
+        self.assertEqual(candidate.firstname, "Arnaud")
         self.assertEqual(candidate.lastname, "Tsombeng")
         self.assertEqual(candidate.email, "arnaud.tsombeng@chemondis.com")
-    
+
+    # Test add duplicate candidate in the database
     def test_add_candidate_duplicate_email(self):
         add_candidate("Arnaud", "Tsombeng", "arnaud.tsombeng@chemondis.com")
         duplicate_candidate = Candidates(
-            firstname = "Test",
-            lastname = "test2",
-            email = "arnaud.tsombeng@chemondis.com"
+            firstname="Test",
+            lastname="test2",
+            email="arnaud.tsombeng@chemondis.com"
         )
         db.session.add(duplicate_candidate)
         self.assertRaises(IntegrityError, db.session.commit)
 
+
 if __name__ == '__main__':
-     unittest.main()
+    unittest.main()

@@ -464,7 +464,7 @@ definitions:
     type: "object"
     properties:
       interviewer_id:
-        type: "string"
+        type: "integer"
       firstname: 
         type: "string"
       lastname: 
@@ -475,7 +475,7 @@ definitions:
     type: "object"
     properties:
       interview_id:
-        type: "string"
+        type: "integer"
       title: 
         type: "string"
       start_time: 
@@ -488,16 +488,16 @@ definitions:
     type: "object"
     properties:
       interview_id:
-        type: "string"
+        type: "integer"
       candidate_id: 
         type: "string"
   Interviewer_assign:
     type: "object"
     properties:
       interview_id:
-        type: "string"
+        type: "integer"
       candidate_id: 
-        type: "string"
+        type: "integer"
   Error:
     type: "object"
     properties:

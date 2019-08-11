@@ -36,4 +36,4 @@
 
 # Api documentation:
 
-    - swagger_API_DOC.yaml
+    - http://localhost:8082/swagger

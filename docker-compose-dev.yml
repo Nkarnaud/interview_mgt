@@ -31,3 +31,28 @@ services:
     environment:
       - POSTGRES_PROFILE=postgres
       - POSTGRES_PASSWORD=postgres
+  
+  nginx:
+    container_name: nginx
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - 8082:8082
+    depends_on:
+      - interview
+
+  swagger:
+    container_name: swagger
+    build:
+      context: ./swagger
+      dockerfile: Dockerfile
+    volumes:
+      - './swagger/swagger.yaml:/usr/share/nginx/html/swagger.yaml'
+    ports:
+      - '3008:8080'
+    environment:
+      - URL=swagger.yaml
+    depends_on:
+      - interview

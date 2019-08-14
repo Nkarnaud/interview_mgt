@@ -39,5 +39,5 @@
 # Api documentation:
 
     - http://localhost:8082/swagger
-    ![Swagger API DOC](/interview/images/Swagger API.png)
+    ![Swagger API DOC](https://github.com/Nkarnaud/interview_mgt/blob/master/interview/images/Swagger%20API.png)
     Format: ![Alt Text](url)

@@ -40,4 +40,4 @@
 
     - http://localhost:8082/swagger
 
-![Swagger API DOC](images/Swagger API.png)
+![Swagger API DOC](/images/Swagger_API.png)

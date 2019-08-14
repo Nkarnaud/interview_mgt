@@ -1,5 +1,13 @@
 # Interview management
 
+    - Write a Python application which provides an API for an interview calendar.
+    - There are interviewers and candidates. Each interview may consist of exactly one candidate and one or more interviewers.
+    - If there are more interviewers available than candidates, the spare interviewers are distributed evenly across candidates.
+
+    1. Interviewers can add slots when they have time independently from each other
+    2. Candidates can add slots when they have time independently from each other
+    3. Anyone can retrieve a collection of slots when interviews can take place. The API allows the caller to optionally define the candidate and optionally to define one or more interviewer. The API requires either the candidate or the interviewer(s) to be set
+
 # Technology stack:
 
     - python 3.7,

@@ -33,12 +33,11 @@
 # Test if service is up and runing:
 
     - http://localhost:5001/interview/ping
-    ![TEST RUNING SERVICE](interview/images/ping.png)
+    ![TEST RUNING SERVICE](/interview/images/ping.png)
     Format: ![Alt Text](url)
 
 # Api documentation:
 
     - http://localhost:8082/swagger
-
-    ![Swagger API DOC](interview/images/Swagger API.png)
+    ![Swagger API DOC](/interview/images/Swagger API.png)
     Format: ![Alt Text](url)
